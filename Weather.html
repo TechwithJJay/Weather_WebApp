@@ -1,0 +1,105 @@
+
+<html>
+  <head>
+  <link rel="stylesheet" href="mystyle.css">
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
+    
+  <script type="text/javascript">
+		var request = new XMLHttpRequest();
+		function showWeatherInfo() {
+			var city_input = document.getElementById("city_input").value;
+			var url = encodeURI("/cgi-bin/weather.py?city=" + city_input);
+		
+			url = encodeURI(url);
+			request.open("GET", url, true);
+			request.onreadystatechange = updatePage;
+			request.send(null);
+		}
+		function updatePage() {
+			if (request.readyState == 4) {
+				if (request.status == 200) {
+					var replyDoc = JSON.parse(request.responseText);
+					
+					// city
+					var city = replyDoc.city;
+					var cityElm = document.getElementById("city");
+					cityElm.removeChild(cityElm.firstChild);
+    				cityElm.appendChild(document.createTextNode(city));
+    				
+    				// weather icon
+    				var icon = replyDoc.icon;
+    				var imgElem = document.getElementById("icon");
+    				imgElem.src = "http://openweathermap.org/img/w/" + icon + ".png";
+    				
+    				// temperature
+					var temp = replyDoc.temp;
+					var tempElm = document.getElementById("temp");
+					tempElm.removeChild(tempElm.firstChild);
+    				tempElm.appendChild(document.createTextNode(temp));
+    				
+    	
+    				
+    				// minimum temperature
+					var temp_min = replyDoc.temp_min;
+					var temp_minElm = document.getElementById("temp_min");
+					temp_minElm.removeChild(temp_minElm.firstChild);
+    				temp_minElm.appendChild(document.createTextNode(temp_min));
+    				
+    				// maximum temperature
+					var temp_max = replyDoc.temp_max;
+					var temp_maxElm = document.getElementById("temp_max");
+					temp_maxElm.removeChild(temp_maxElm.firstChild);
+    				temp_maxElm.appendChild(document.createTextNode(temp_max));
+					
+					// humidity
+				    var humidity = replyDoc.humidity;
+					var humidityElm = document.getElementById("humidity");
+					humidityElm.removeChild(humidityElm.firstChild);
+    				humidityElm.appendChild(document.createTextNode(humidity));
+					
+					// wind speed
+					var speed = replyDoc.speed;
+					var speedElm = document.getElementById("speed");
+					speedElm.removeChild(speedElm.firstChild);
+    				speedElm.appendChild(document.createTextNode(speed));
+    				
+    				
+    				
+					// backgroound changes with random search term (city name)
+					document.body.style.backgroundImage = "url(' https://source.unsplash.com/1600x900/?" + city + " ')"
+				}
+			}
+		}
+	  </script>	
+	  </head>
+	  
+	  <body>
+	 
+	  <div class="card">
+	  	<h3 style="text-align:center;"> This is a Weather Information Site </h3> 
+		<h5 style="text-align:center;">  by Sajid Muhammad Junaid </h5> 
+		<p style="text-align:center;" id="date">
+			<button style="text-align:center;" type="submit" name="submit" onclick="document.getElementById('date').innerHTML = Date()">
+			Display date and time </button> <br /> 
+		</p>
+   		
+   		
+   		<p style="text-align:center;">
+	    	<img  id="icon" src="" width="64"> <br />
+	    	<b>City:</b> <span id="city"> City </span><br/> <br />
+	    	<b>Temperature</b>: <span id="temp">0</span> &#8451; <br/><br />
+	    	<b>Min Temp </b>: <span id="temp_min">0</span> &#8451; <br/>
+	    	<b>Max Temp </b>: <span id="temp_max">0</span> &#8451; <br/> <br/> 
+	        <b>Humidity</b>: <span id="humidity">0</span> % <br/><br/> 
+	      	<b>Wind speed</b>: <span id="speed">0</span> % <br />
+   		</p> <br />
+	    
+	    
+	    <p style="text-align:center;">
+	    <input type="text" id="city_input">
+	    <button style="text-align:center;" type="submit" name="submit" onclick="showWeatherInfo()">Show</button>	         	   	 
+	   	</p> <br />   <br />
+	 
+    </body>
+    
+</html>
